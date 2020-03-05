@@ -9,5 +9,5 @@ CzechIdM docker image is built atop BCV's Tomcat image. All additional modules, 
 
 ## Additional info
 - Release tags on this repository correspond to release tags on individual images.
-- See [README.md](images/czechidm/README.md) in **images/czechidm/** to get more information about specific docker image.
-- See [README.md](compose/README.md) in **compose/** for compose YAML files and for starting images as a part of the infrastructure.
+- See **README.md** in [images/czechidm/](images/czechidm/) to get more information about specific docker image.
+- See **README.md** in [compose/](compose/) for compose YAML files and for starting images as a part of the infrastructure.
