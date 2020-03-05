@@ -1,0 +1,20 @@
+# Example compose file for CzechIdM image.
+# This image runs with database created on H2 in-memory store.
+# Therefore, all data vanish once the application is stopped.
+#
+# Can be used for presentation purposes.
+version: '3.2'
+
+services:
+  appserver:
+    image: bcv-czechidm:10.1.0-r0
+    container_name: czechidm
+    ports:
+      - 8009:8009
+      - 8080:8080
+    hostname: czechidm
+    environment:
+      - JAVA_XMS=1024M
+      - JAVA_XMX=2048M
+      - TZ=Europe/Prague
+      - DOCKER_SKIP_IDM_CONFIGURATION=yes

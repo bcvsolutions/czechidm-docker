@@ -1,0 +1,91 @@
+# More-elaborate example compose file for CzechIdM image.
+# In fact, not many parameters are mandatory - see README.md.
+version: '3.2'
+
+services:
+  appserver:
+    image: bcv-czechidm:10.1.0-r0
+    container_name: czechidm
+    ports:
+      - 8009:8009
+      - 8080:8080
+    hostname: czechidm
+    environment:
+      - JAVA_XMS=1024M
+      - JAVA_XMX=2048M
+      - TZ=Europe/Prague
+      - DOCKER_SECURE_SECRETS=yes
+      - CZECHIDM_APP_INSTANCEID=idm-primary
+      - CZECHIDM_APP_STAGE=docker-image
+      - CZECHIDM_DB_URL=jdbc:postgresql://172.31.255.131:5432/czechidm
+      - CZECHIDM_DB_USER=czechidm
+      - CZECHIDM_DB_PASSFILE=/run/secrets/db.pwfile
+      - CZECHIDM_DB_DRIVERCLASS=org.postgresql.Driver
+      - CZECHIDM_ALLOWED_ORIGINS=http://localhost
+      - CZECHIDM_JWT_TOKEN_PASSFILE=/run/secrets/jwt.pwfile
+#      - CZECHIDM_LOGGING_LEVEL=INFO
+#      - CZECHIDM_LOGGING_LEVEL_DB=ERROR
+#      - DOCKER_TOMCAT_ENABLE_FILE_LOGGING=
+#      - CZECHIDM_MAIL_ENABLED=true
+#      - CZECHIDM_MAIL_PROTOCOL=smtps
+#      - CZECHIDM_MAIL_HOST=mail-relay.bcv
+#      - CZECHIDM_MAIL_PORT=465
+#      - CZECHIDM_MAIL_USER=idm-mailer
+#      - CZECHIDM_MAIL_PASSFILE=/run/secrets/mailer.pwfile
+#      - CZECHIDM_MAIL_SENDER=czechidm@docker.bcv
+    volumes:
+      - type: bind
+        source: ./idm_db.pwfile
+        target: /run/secrets/db.pwfile
+        read_only: true
+      - type: bind
+        source: ./idm_jwt.pwfile
+        target: /run/secrets/jwt.pwfile
+        read_only: true
+      - type: bind
+        source: ./idm_mailer.pwfile
+        target: /run/secrets/mailer.pwfile
+        read_only: true
+# This is for binding folder with PEM certificates to import into truststore.
+#      - type: bind
+#        source: ./certs
+#        target: /idmbuild/trustcert
+#        read_only: true
+# This is an example of adding single jar to IdM modules.
+#      - type: bind
+#        source: ./jsch-0.1.53.jar
+#        target: /idmbuild/modules/jsch-0.1.53.jar
+#        read_only: true
+
+# ######################## SECRETS ########################
+# This is to emulate working with secrets.
+# If using mounted secret with DockerCE, set env variable DOCKER_SECURE_SECRETS=yes .
+# If you do not mount the secret, container will create its own.
+#    volumes:
+#      - type: bind
+#        source: ./idm_secret.key
+#        target: /run/secrets/secret.key
+#        read_only: true
+#
+# Secrets do not work in Docker CE, they only work with Swarm.
+# On the CE they are emulated by bind with rw-rw-r-- privileges
+# making the whole thing highly insecure.
+#
+# For those reasons, we simply emulate them with mounted file.
+# But we expect it to be mounted as a proper secret under /run/secrets/secret.key .
+#
+# For the curious, this is how to write proper secrets config:
+#
+# Global secrets definition
+#secrets:
+#  idm-secret-key:
+#    file: ./idm_secret.key
+#
+# Secrets stanza in the services.<service> config,
+# secrets are mounted under /run/secrets/<target> .
+#    secrets:
+#      - source: idm-secret-key
+#        target: secret.key
+#        uid: '999'
+#        gid: '998'
+#        mode: 0440
