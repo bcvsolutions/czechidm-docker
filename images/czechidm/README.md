@@ -23,7 +23,7 @@ To build a new CzechIdM image, set the correct **CZECHIDM_VERSION** in the Docke
 Then cd to the directory which contains the Dockerfile and issue `docker build -t bcv-czechidm:10.1.0-r0 ./`.
 
 The build process:
-1. Pulls **bcv-tomcat:<some version>** image.
+1. Pulls **bcv-tomcat:some-version** image.
 1. Installs necessary tooling - openssl, xmlstarlet, etc.
 1. Secures Tomcat installation, namely:
   1. Disables shutdown port.
