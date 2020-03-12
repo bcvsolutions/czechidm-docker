@@ -20,7 +20,7 @@ bcv-czechidm:latest       // nightly build
 
 ## Building
 To build a new CzechIdM image, set the correct **CZECHIDM_VERSION** in the Dockerfile and put the application WAR archive into **dropin/idm-app-$CZECHIDM_VERSION.war**
-Then cd to the directory which contains the Dockerfile and issue `docker build -t bcv-czechidm:10.1.0-r0 ./`.
+Then cd to the directory which contains the Dockerfile and issue `docker build -t bcv-czechidm:10.1.0-r1 ./`.
 
 The build process:
 1. Pulls **bcv-tomcat:some-version** image.
@@ -49,7 +49,7 @@ version: '3.2'
 
 services:
   appserver:
-    image: bcv-czechidm:10.1.0-r0
+    image: bcv-czechidm:10.1.0-r1
     container_name: czechidm
     ports:
       - 8009:8009
@@ -123,6 +123,7 @@ There is also a number of new env variables added in this container.
 - **CZECHIDM_MAIL_USER** - Username for logging into mail relay. If relay does not need authentication, leave it at default. **Default: not set, property not added to config**.
 - **CZECHIDM_MAIL_PASSFILE** - Password for logging into mail relay. Path to the file where password is stored, it is `cat`ed into the configuration. If relay does not need authentication, leave it at default. **Default: not set, property not added to config**.
 - **CZECHIDM_MAIL_SENDER** - The "From" address in the mail. **Default: czechidm@localhost**.
+- **CZECHIDM_MAX_UPLOAD_SIZE** - The maximum size of uploaded file the application accepts (e.g. "20MB", "1024KB"). Supported units are **KB** and **MB** (case sensitive!). The default value should be enough for almost everybody. **Default: 100MB**
 
 ## Mounted files and volumes
 - Mandatory

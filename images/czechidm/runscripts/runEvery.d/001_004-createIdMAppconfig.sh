@@ -117,3 +117,11 @@ if [ -z "${CZECHIDM_MAIL_SENDER}" ]; then
 else
   sed -i "s/idm.sec.core.emailer.from.*/idm.sec.core.emailer.from=$CZECHIDM_MAIL_SENDER/" application-docker.properties;
 fi
+
+# SPRING file upload permitted size
+if [ -z "${CZECHIDM_MAX_UPLOAD_SIZE}" ]; then
+  echo "[$0] CZECHIDM_MAX_UPLOAD_SIZE not set, using default from the template.";
+else
+  sed -i "s/spring.servlet.multipart.max-file-size.*/spring.servlet.multipart.max-file-size=$CZECHIDM_MAX_UPLOAD_SIZE/" application-docker.properties;
+  sed -i "s/spring.servlet.multipart.max-request-size.*/spring.servlet.multipart.max-request-size=$CZECHIDM_MAX_UPLOAD_SIZE/" application-docker.properties;
+fi
