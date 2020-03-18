@@ -71,7 +71,6 @@ RUN groupadd -r idmbuild && \
 # because it also needs whole lib/ with it - that would make more than 100MB of
 # dead weight.
 COPY "dropin/idm-app-$CZECHIDM_VERSION.war" "dropin/application-docker.TPL.properties" "$CZECHIDM_BUILDROOT/product/"
-RUN chown -v idmbuild:idmbuild $CZECHIDM_BUILDROOT/product/*war
 
 # finally, copy over the runscripts; this adds our runscripts to the Tomcat baseimage
 COPY runscripts "$RUNSCRIPTS_PATH/"
