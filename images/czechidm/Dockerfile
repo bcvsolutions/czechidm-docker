@@ -18,9 +18,14 @@ RUN yum install -y xmlstarlet postgresql-jdbc openssl dos2unix which && \
 
 # harden tomcat config and clean tomcat-bundled webapps
 RUN cd $TOMCAT_BASE/conf && \
-		xmlstarlet ed -L -u "/Server[@port='8005' and @shutdown='SHUTDOWN']/@port" -v "-1" server.xml && \
+		xmlstarlet ed -L \
+		-u "/Server[@port='8005' and @shutdown='SHUTDOWN']/@port" -v "-1" \
+		-a "//Connector[@port='8080']" -t attr -n maxSwallowSize -v "-1" \
+		server.xml && \
 		\
-		xmlstarlet ed -L -N ns="http://xmlns.jcp.org/xml/ns/javaee" -u "//ns:servlet/ns:servlet-name[text()='default']/../ns:init-param/ns:param-name[text()='showServerInfo']/../ns:param-value/text()" -v "false" web.xml && \
+		xmlstarlet ed -L -N ns="http://xmlns.jcp.org/xml/ns/javaee" \
+		-u "//ns:servlet/ns:servlet-name[text()='default']/../ns:init-param/ns:param-name[text()='showServerInfo']/../ns:param-value/text()" -v "false" \
+		web.xml && \
 		\
 		rm -rf $TOMCAT_BASE/webapps/{examples,docs,ROOT,host-manager,manager} && \
 		chown root:root -v $TOMCAT_BASE/webapps
