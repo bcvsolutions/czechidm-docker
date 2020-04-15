@@ -4,7 +4,7 @@ version: '3.2'
 
 services:
   appserver:
-    image: bcv-czechidm:10.1.0-r0
+    image: bcv-czechidm:10.1.0-r1
     container_name: czechidm
     ports:
       - 8009:8009
@@ -33,6 +33,7 @@ services:
 #      - CZECHIDM_MAIL_USER=idm-mailer
 #      - CZECHIDM_MAIL_PASSFILE=/run/secrets/mailer.pwfile
 #      - CZECHIDM_MAIL_SENDER=czechidm@docker.bcv
+#      - CZECHIDM_MAX_UPLOAD_SIZE=20MB
     volumes:
       - type: bind
         source: ./idm_db.pwfile
