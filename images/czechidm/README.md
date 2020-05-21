@@ -20,7 +20,7 @@ bcv-czechidm:latest       // nightly build
 
 ## Building
 To build a new CzechIdM image, set the correct **CZECHIDM_VERSION** in the Dockerfile and put the application WAR archive into **dropin/idm-app-$CZECHIDM_VERSION.war**
-Then cd to the directory which contains the Dockerfile and issue `docker build -t bcv-czechidm:10.2.0-r0 ./`.
+Then cd to the directory which contains the Dockerfile and issue `docker build -t bcv-czechidm:10.3.1-r0 ./`.
 
 The build process:
 1. Pulls **bcv-tomcat:some-version** image.
@@ -49,7 +49,7 @@ version: '3.2'
 
 services:
   appserver:
-    image: bcv-czechidm:10.2.0-r0
+    image: bcv-czechidm:10.3.1-r0
     container_name: czechidm
     ports:
       - 8009:8009
