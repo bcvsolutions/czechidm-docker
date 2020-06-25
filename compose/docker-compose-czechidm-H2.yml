@@ -7,7 +7,7 @@ version: '3.2'
 
 services:
   appserver:
-    image: bcv-czechidm:10.3.1-r0
+    image: bcv-czechidm:10.3.3-r0
     container_name: czechidm
     ports:
       - 8009:8009
@@ -17,4 +17,6 @@ services:
       - JAVA_XMS=1024M
       - JAVA_XMX=2048M
       - TZ=Europe/Prague
+      - DOCKER_TOMCAT_ENABLE_AJP=
+#      - DOCKER_TOMCAT_DISABLE_ACCESS_LOG=
       - DOCKER_SKIP_IDM_CONFIGURATION=yes
