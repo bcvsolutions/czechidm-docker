@@ -1,10 +1,10 @@
-FROM bcv-tomcat:8.5.50-r0
+FROM bcv-tomcat:8.5.56-r0
 
 ENV MAVEN_MAJOR 3
 ENV MAVEN_VERSION 3.6.3
 ENV MAVEN_HOME /idmbuild/maven/current
 
-ENV CZECHIDM_VERSION 10.3.1
+ENV CZECHIDM_VERSION 10.3.3
 ENV CZECHIDM_BUILDROOT /idmbuild
 # convenience for our image
 ENV TOMCAT_BASE /opt/tomcat/current
