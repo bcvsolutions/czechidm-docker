@@ -11,7 +11,6 @@ configfile="$RUNSCRIPTS_PATH/startTomcat.d/001_006-adjustTomcatConfig.sh";
 echo -n > "$configfile";
 
 echo "JAVA_OPTS=\"\$JAVA_OPTS -Dspring.profiles.active=docker\"" >> "$configfile";
-echo "JAVA_OPTS=\"\$JAVA_OPTS -Djava.util.Arrays.useLegacyMergeSort=true\"" >> "$configfile";
 
 
 # Tell tomcat to use IdM config folder
