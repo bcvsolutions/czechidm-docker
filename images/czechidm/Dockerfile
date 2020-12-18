@@ -1,20 +1,23 @@
-FROM bcv-tomcat:8.5.56-r0
+FROM bcv-tomcat:8.5.60-r0
 
 ENV MAVEN_MAJOR 3
 ENV MAVEN_VERSION 3.6.3
 ENV MAVEN_HOME /idmbuild/maven/current
 
-ENV CZECHIDM_VERSION 10.3.3
+ENV CZECHIDM_VERSION 10.7.0
 ENV CZECHIDM_BUILDROOT /idmbuild
 # convenience for our image
 ENV TOMCAT_BASE /opt/tomcat/current
 ENV CZECHIDM_CONFIG /opt/czechidm
 
 # install sw and link it where necessary
-RUN yum install -y xmlstarlet postgresql-jdbc openssl dos2unix which && \
-		yum clean all && \
-		\
-		ln -s /usr/share/java/postgresql-jdbc.jar $TOMCAT_BASE/lib/
+RUN yum install -y xmlstarlet openssl dos2unix which && \
+		yum clean all
+
+# get new postgres driver
+# checksum & grep is a poor-man's integrity/signature verification
+RUN	wget https://jdbc.postgresql.org/download/postgresql-42.2.11.jar -P $TOMCAT_BASE/lib/ && \
+		sha256sum $TOMCAT_BASE/lib/postgresql-42.2.11.jar | grep -q 31e9f3dc586c07477235893279ee80036de377681badaa1f27db6b74ab2437f4
 
 # harden tomcat config and clean tomcat-bundled webapps
 RUN cd $TOMCAT_BASE/conf && \

@@ -49,7 +49,7 @@ version: '3.2'
 
 services:
   appserver:
-    image: bcv-czechidm:10.3.1-r0
+    image: bcv-czechidm:SOMETAG
     container_name: czechidm
     ports:
       - 8009:8009
