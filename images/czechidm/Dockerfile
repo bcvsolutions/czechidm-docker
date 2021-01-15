@@ -1,4 +1,4 @@
-FROM bcv-tomcat:8.5.60-r0
+FROM bcv-tomcat:9.0.41-r0
 
 ENV MAVEN_MAJOR 3
 ENV MAVEN_VERSION 3.6.3
@@ -38,7 +38,7 @@ RUN cd $TOMCAT_BASE/conf && \
 # also download, install and set up maven
 RUN groupadd -r idmbuild && \
 		useradd -r -s /sbin/nologin -g idmbuild -d "$CZECHIDM_BUILDROOT" idmbuild && \
-		mkdir -pv $CZECHIDM_BUILDROOT/{product,modules,dist,tool,frontend/config,frontend/czechidm-modules,target,trustcert,checksums,maven} && \
+		mkdir -pv $CZECHIDM_BUILDROOT/{product,modules,dist,tool,frontend/config,frontend/czechidm-modules,target,checksums,maven} && \
 		chmod -v o-rwx "$CZECHIDM_BUILDROOT" && \
 		chown -Rfv idmbuild:idmbuild "$CZECHIDM_BUILDROOT" && \
 		\

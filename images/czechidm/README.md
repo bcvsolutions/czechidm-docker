@@ -1,9 +1,9 @@
 # CzechIdM image
-Image built atop BCV's Tomcat image with Apache Tomcat 8.5.x version.
+Image built atop BCV's Tomcat image with Apache Tomcat 9.0.x version.
 You can find our Tomcat Docker image [here](https://github.com/bcvsolutions/tomcat-docker). This image is referenced as a "baseimage" throughout this text.
 
 ## Image versioning
-This image is versioned by CzechIdM version. The underlying Tomcat version mentioned since CzechIdM is distributed as a whole application stack (well, without a database).
+This image is versioned by CzechIdM version. The underlying Tomcat version is not mentioned since CzechIdM is distributed as a whole application stack (well, without a database).
 
 Naming scheme is pretty simple: **bcv-czechidm:CZECHIDM_VERSION-rIMAGE_VERSION**.
 - Image name is **bcv-czechidm**.
@@ -20,7 +20,7 @@ bcv-czechidm:latest       // nightly build
 
 ## Building
 To build a new CzechIdM image, set the correct **CZECHIDM_VERSION** in the Dockerfile and put the application WAR archive into **dropin/idm-app-$CZECHIDM_VERSION.war**
-Then cd to the directory which contains the Dockerfile and issue `docker build -t <image tag here> ./`.
+Then cd to the directory which contains the Dockerfile and issue `docker build --no-cache -t <image tag here> ./`.
 
 The build process:
 1. Pulls **bcv-tomcat:some-version** image.
@@ -86,14 +86,11 @@ CzechIdM image adds its own scripts there:
     - **CZECHIDM_LOGGING_LEVEL_DB** - Loglevel for messages logged into the application database (browsable through GUI, e.g. "eu.bcvsolutions").
     - **CZECHIDM_LOGGING_LEVEL** - Loglevel for usually-needed log messages (e.g. "org.springframework", "org.hibernate.SQL", etc.).
 - **runEvery.d/001_004-createIdMAppconfig.sh** - This file takes a template configuration /idmbuild/product/application-docker.TPL.properties and enriches it from the current environment. Resulting file is /opt/czechidm/etc/application-docker.properties. Variables like CZECHIDM_DB_URL ultimately get stored here as proper Spring configuration properties. There are many env variables in play, please consult chapters below.
-- **runEvery.d/001_005-generateIdMTruststore.sh** - This script generates (if not existing) and updates CzechIdM Java truststore. It compares contents of `/idmbuild/trustcert/` directory with current truststore and updates the truststore accordingly - by removing obsolete and adding new certificates.
-  - Certificates in the truststore are aliased by their backing file name. For example, certificate with alias `ad-ca.pem` is considered to have backing file `/idmbuild/trustcert/ad-ca.pem`. This comparison is done by name, so if you simply refresh the ad-ca.pem storing new certificate in there, the truststore **will not be updated**.
-  - All certificates have to be in PEM format.
-  - Resulting truststore is /opt/czechidm/etc/truststore.jks.
-  - Script generates (on-the-fly) new environment-adjusting file for the Tomcat, passing there truststore path and truststore password. This file is named `/runscripts/startTomcat.d/001_005-IdMTruststoreOpts.sh`.
+- **runEvery.d/001_005-generateIdMTruststore.sh** - This script was superseded by similar baseimage functionality.
 - **runEvery.d/001_006-adjustTomcatConfig.sh** - This script adds some parameters to Tomcat's JAVA_OPTS. Those parameters are necessary for IdM to run.
   - The `/runscripts/startTomcat.d/001_006-adjustTomcatConfig.sh` is generated on-the-fly.
-  - Script creates `$TOMCAT_BASE/bin/setenv.sh` file, effectively adding /opt/czechidm/etc/ and other directories to the classpath, so Tomcat is able to properly load the CzechIdM configuration.
+  - Script creates `$TOMCAT_BASE/bin/setenv.sh` file, effectively adding `/opt/czechidm/etc/` and other directories to the classpath, so Tomcat is able to properly load the CzechIdM configuration.
+- **runEvery.d/001_007-fixupMountedDirsPrivs.sh** - Some mounted directories (namely `/opt/czechidm/{backup,data}`) need to be writable for tomcat user. If you mount them from the host, they may have some other owner or privileges. This script fixes that.
 
 ## Container shutdown
 See Tomcat baseimage doc. IdM is very swift when shutting down, the default STOP_TIMEOUT should be more than enough.
@@ -173,14 +170,14 @@ There is also a number of new env variables added in this container.
           read_only: true
       ```
   - Trusted certificates directory
-    - See 001_005-generateIdMTruststore.sh script documentation.
+    - See 000_002-generateJavaTruststore.sh script documentation in the baseimage doc.
     - Without this directory mounted, CzechIdM will not trust any SSL certificates. This effectively prevents identity manager to securely connect to other systems. Nowadays, it is simply dangerous to run all communication in plaintext, so populating and mounting this directory is highly recommended.
     - Example
       ```yaml
       volumes:
         - type: bind
           source: ./certs
-          target: /idmbuild/trustcert
+          target: /opt/tomcat/truststore/certs
           read_only: true
       ```
 
