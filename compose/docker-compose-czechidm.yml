@@ -4,7 +4,7 @@ version: '3.2'
 
 services:
   appserver:
-    image: bcv-czechidm:10.7.0-r0
+    image: bcv-czechidm:10.7.0-r1
     container_name: czechidm
     ports:
       - 8009:8009
@@ -50,9 +50,10 @@ services:
 #        target: /run/secrets/mailer.pwfile
 #        read_only: true
 # This is for binding folder with PEM certificates to import into truststore.
+# It comes from bcv-tomcat baseimage.
 #      - type: bind
 #        source: ./certs
-#        target: /idmbuild/trustcert
+#        target: /opt/tomcat/truststore/certs
 #        read_only: true
 # This is an example of adding single jar to IdM modules.
 #      - type: bind
