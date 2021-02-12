@@ -146,6 +146,21 @@ There is also a number of new env variables added in this container.
           target: /run/secrets/secret.key
           read_only: true
       ```
+  - Repository credentials
+    - Login to repo.iamappliance.com for Maven and NPM.
+    - If the login and password are filled in, the Maven and NPM packages will be downloaded from repo.iamappliance.com
+    - Example
+      ```yaml
+      volumes:
+        - type: bind
+          source: /etc/yum/var/iam_username
+          target: /run/secrets/iam_repo_username
+          read_only: true
+        - type: bind
+          source: /etc/yum/var/iam_password
+          target: /run/secrets/iam_repo_password
+          read_only: true
+      ```
 - Optional
   - JWT token file
     - This key protects user session cookies.

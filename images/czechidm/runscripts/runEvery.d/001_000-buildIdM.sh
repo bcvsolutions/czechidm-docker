@@ -62,21 +62,43 @@ echo "[$0] Rebuilding CzechIdM...";
 rm -rf "$CZECHIDM_BUILDROOT/nodejs-dist"
 mkdir "$CZECHIDM_BUILDROOT/nodejs-dist"
 cd "$CZECHIDM_BUILDROOT/nodejs-dist"
-wget -q https://nodejs.org/dist/v15.3.0/node-v15.3.0-linux-x64.tar.xz
-sha256sum node-v15.3.0-linux-x64.tar.xz | grep -q 02741db3f55022a94f43fa1774e9fc389848949ec5f5cff822833d8b9711ad93
+wget -q https://repo.iamappliance.com/repository/binary-public/node/v15.3.0/node-v15.3.0-linux-x64.tar.gz
+sha256sum node-v15.3.0-linux-x64.tar.gz | grep -q c3f6c64d98e623c783b7de7580365be74d8a2dba87529447ae66061609b5d0ec
 if [ "$?" -eq "0" ]; then
   echo "[$0] NodeJS 15.3.0 archive verification succeeded.";
 else
   echo "[$0] NodeJS 15.3.0 archive verification failed. Killing the rebuild...";
-  rm -fv node-v15.3.0-linux-x64.tar.xz
+  rm -fv node-v15.3.0-linux-x64.tar.gz
 fi
-tar xJf node-v15.3.0-linux-x64.tar.xz
+tar xJf node-v15.3.0-linux-x64.tar.gz
 
 # doing the rebuild here
 cd "$CZECHIDM_BUILDROOT/tool" && \
 jar xf "$CZECHIDM_BUILDROOT/product/idm-app-$CZECHIDM_VERSION.war" WEB-INF/idm-tool.jar WEB-INF/lib && \
 mv WEB-INF/* ./ && \
 rmdir WEB-INF && \
+if [ -f "/run/secrets/iam_repo_username" ] && [ -f "/run/secrets/iam_repo_password" ]; then
+  echo "[$0] Repository credentials found.";
+  read IAM_REPO_USERNAME < /run/secrets/iam_repo_username
+  read IAM_REPO_PASSWORD < /run/secrets/iam_repo_password
+  IAM_REPO_AUTHSTRING=$(echo -n "$IAM_REPO_USERNAME:$IAM_REPO_PASSWORD" | openssl base64)
+  cp -f $CZECHIDM_BUILDROOT/tpl/npmrc.TPL ~idmbuild/.npmrc && \
+  sed -i "s/__TPL_IAM_AUTHSTRING__/$IAM_REPO_AUTHSTRING/" ~idmbuild/.npmrc && \
+  cp -f $CZECHIDM_BUILDROOT/tpl/settings.xml.TPL ~idmbuild/.m2/settings.xml && \
+  sed -i "s/__TPL_IAM_USERNAME__/$IAM_REPO_USERNAME/" ~idmbuild/.m2/settings.xml && \
+  sed -i "s/__TPL_IAM_PASSWORD__/$IAM_REPO_PASSWORD/" ~idmbuild/.m2/settings.xml && \
+  cp -f $CZECHIDM_BUILDROOT/tpl/fe-pom.xml.TPL $CZECHIDM_BUILDROOT/tool/fe-pom.xml
+  mkdir "idm-tool" && \
+  cd "idm-tool" && \
+  jar xf ../idm-tool.jar && \
+  rm -f ../idm-tool.jar && \
+  mv -f $CZECHIDM_BUILDROOT/tool/fe-pom.xml ./eu/bcvsolutions/idm/build/fe-pom.xml && \
+  jar cmf META-INF/MANIFEST.MF ../idm-tool.jar ./ && \
+  cd $CZECHIDM_BUILDROOT/tool && \
+  rm -rf $CZECHIDM_BUILDROOT/tool/idm-tool
+else
+  echo "[$0] Login and password for repository not found.";
+fi && \
 sudo -Eu idmbuild bash -c "PATH=$PATH:$CZECHIDM_BUILDROOT/nodejs-dist/node-v15.3.0-linux-x64/bin java -jar idm-tool.jar -p --build";
 res=$?;
 if [ "$res" -eq "0" ]; then
@@ -106,6 +128,8 @@ echo "[$0] Cleaning up the IdM Tool directory.";
 rm -rf $CZECHIDM_BUILDROOT/tool/*;
 rm -rf $CZECHIDM_BUILDROOT/dist/*;
 rm -rf $CZECHIDM_BUILDROOT/target/*;
+rm -rf $CZECHIDM_BUILDROOT/.npmrc;
+rm -rf $CZECHIDM_BUILDROOT/.m2/settings.xml;
 
 # by default, we get rid of m2 packages
 # unless DOCKER_PERSIST_M2_REPO is set
