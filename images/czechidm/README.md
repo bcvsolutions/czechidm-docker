@@ -121,6 +121,13 @@ There is also a number of new env variables added in this container.
 - **CZECHIDM_MAIL_PASSFILE** - Password for logging into mail relay. Path to the file where password is stored, it is `cat`ed into the configuration. If relay does not need authentication, leave it at default. **Default: not set, property not added to config**.
 - **CZECHIDM_MAIL_SENDER** - The "From" address in the mail. **Default: czechidm@localhost**.
 - **CZECHIDM_MAX_UPLOAD_SIZE** - The maximum size of uploaded file the application accepts (e.g. "20MB", "1024KB"). Supported units are **KB** and **MB** (case sensitive!). The default value should be enough for almost everybody. **Default: 100MB**
+- **CZECHIDM_SSO_ENABLED** - Enable authentication filter on BE and forwarding logic on FE during log in and logout (single sign out). Default value is false if this property is not set. Don't override this property on FE, otherwise you end up with no option how to log into IdM. If you enable it by overriding on FE and then you won't be able to log in via CAS, changing this value in env. properties will have no effect because values from FE overide has bigger priority.
+- **CZECHIDM_CAS_URL** - Base URL where CAS is accessible. It's needed on FE and BE.
+- **CZECHIDM_CAS_LOGIN_SUFFIX** - Suffix which is appended to idm.pub.core.cas-url for log in redirect on FE
+- **CZECHIDM_CAS_LOGOUT_SUFFIX** - Suffix which is appended to idm.pub.core.cas-url for single sign out redirect on FE
+- **CZECHIDM_CAS_IDM_URL** - URL of IdM. This URL is used for redirect back after logout and for ticket validation on BE in authentication filter
+- **CZECHIDM_CAS_HEADER_NAME** - Header name where CAS sending the ticket value, it's used on BE in authentication filter
+- **CZECHIDM_CAS_HEADER_PREFIX** - Prefix for the value of header defined by idm.sec.core.cas-header-name It's used in authentication filter on BE so we will get the token directly
 
 ## Mounted files and volumes
 - Mandatory
