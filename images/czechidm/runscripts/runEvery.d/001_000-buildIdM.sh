@@ -70,7 +70,7 @@ else
   echo "[$0] NodeJS 15.3.0 archive verification failed. Killing the rebuild...";
   rm -fv node-v15.3.0-linux-x64.tar.gz
 fi
-tar xJf node-v15.3.0-linux-x64.tar.gz
+tar xzf node-v15.3.0-linux-x64.tar.gz
 
 # doing the rebuild here
 cd "$CZECHIDM_BUILDROOT/tool" && \
