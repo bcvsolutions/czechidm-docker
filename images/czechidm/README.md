@@ -180,7 +180,6 @@ There is also a number of new env variables added in this container.
           target: /opt/tomcat/truststore/certs
           read_only: true
       ```
-
   - Attachments directory
     - CzechIdM supports attaching files to certain actions in GUI. Those attachments are stored as files on the disk - in this directory (`/opt/czechidm/data` inside the container). If you want to persist attachments (which you 100% want unless you don't use them at all), you want this directory mounted.
     - Without this directory mounted, all attachments the user inserted into CzechIdM will be lost on container rebuild.
@@ -212,6 +211,21 @@ There is also a number of new env variables added in this container.
         - type: bind
           source: ./connector-jars
           target: /idmbuild/modules
+          read_only: true
+      ```
+  - Repository credentials
+    - Login and password to [repo.iamappliance.com](repo.iamappliance.com) for Maven and NPM.
+    - If the login and password are filled in, the Maven and NPM packages will be downloaded from repo.iamappliance.com. If not, publicly available portals (Maven and NodeJS central) will be used.
+    - Example
+      ```yaml
+      volumes:
+        - type: bind
+          source: /etc/yum/var/iam_username
+          target: /run/secrets/iam_repo_username
+          read_only: true
+        - type: bind
+          source: /etc/yum/var/iam_password
+          target: /run/secrets/iam_repo_password
           read_only: true
       ```
 
