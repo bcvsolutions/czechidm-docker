@@ -129,38 +129,38 @@ fi
 # CAS properties
 
 #SSO enabled
-if [ -z "${CZECHIDM_SSO_ENABLED}" ]; then
-  echo "[$0] CZECHIDM_SSO_ENABLED not set, using default from the template.";
+if [ -z "${CZECHIDM_CAS_ENABLED}" ]; then
+  echo "[$0] CZECHIDM_CAS_ENABLED not set, using default from the template.";
 else
-  sed -i "s/idm.pub.core.cas-sso.enabled.*/idm.pub.core.cas-sso.enabled=$CZECHIDM_SSO_ENABLED/" application-docker.properties;
+  sed -i "s/idm.pub.core.cas-sso.enabled.*/idm.pub.core.cas-sso.enabled=$CZECHIDM_CAS_ENABLED/" application-docker.properties;
 fi
 
 # CAS url
 if [ -z "${CZECHIDM_CAS_URL}" ]; then
   echo "[$0] CZECHIDM_CAS_URL not set, using default from the template.";
 else
-  sed -i "s/idm.pub.core.cas-url.*/idm.pub.core.cas-url=$CZECHIDM_CAS_URL/" application-docker.properties;
+  sed -i "s|idm.pub.core.cas-url.*|idm.pub.core.cas-url=$CZECHIDM_CAS_URL|" application-docker.properties;
 fi
 
 # CAS login suffix
 if [ -z "${CZECHIDM_CAS_LOGIN_SUFFIX}" ]; then
   echo "[$0] CZECHIDM_CAS_LOGIN_SUFFIX not set, using default from the template.";
 else
-  sed -i "s/idm.pub.core.cas-login-suffix.*/idm.pub.core.cas-login-suffix=$CZECHIDM_CAS_LOGIN_SUFFIX/" application-docker.properties;
+  sed -i "s|idm.pub.core.cas-login-suffix.*|idm.pub.core.cas-login-suffix=$CZECHIDM_CAS_LOGIN_SUFFIX|" application-docker.properties;
 fi
 
 # CAS logout suffix
 if [ -z "${CZECHIDM_CAS_LOGOUT_SUFFIX}" ]; then
   echo "[$0] CZECHIDM_CAS_LOGOUT_SUFFIX not set, using default from the template.";
 else
-  sed -i "s/idm.pub.core.cas-logout-suffix.*/idm.pub.core.cas-logout-suffix=$CZECHIDM_CAS_LOGOUT_SUFFIX/" application-docker.properties;
+  sed -i "s|idm.pub.core.cas-logout-suffix.*|idm.pub.core.cas-logout-suffix=$CZECHIDM_CAS_LOGOUT_SUFFIX|" application-docker.properties;
 fi
 
 # IdM url
 if [ -z "${CZECHIDM_CAS_IDM_URL}" ]; then
   echo "[$0] CZECHIDM_CAS_IDM_URL not set, using default from the template.";
 else
-  sed -i "s/idm.pub.core.cas-idm-url.*/idm.pub.core.cas-idm-url=$CZECHIDM_CAS_IDM_URL/" application-docker.properties;
+  sed -i "s|idm.pub.core.cas-idm-url.*|idm.pub.core.cas-idm-url=$CZECHIDM_CAS_IDM_URL|" application-docker.properties;
 fi
 
 # SSO header name
@@ -174,5 +174,5 @@ fi
 if [ -z "${CZECHIDM_CAS_HEADER_PREFIX}" ]; then
   echo "[$0] CZECHIDM_CAS_HEADER_PREFIX not set, using default from the template.";
 else
-  sed -i "s/idm.sec.core.cas-header-prefix.*/idm.sec.core.cas-header-prefix=$CZECHIDM_CAS_HEADER_PREFIX/" application-docker.properties;
+  sed -i "s|idm.sec.core.cas-header-prefix.*|idm.sec.core.cas-header-prefix=$CZECHIDM_CAS_HEADER_PREFIX|" application-docker.properties;
 fi
