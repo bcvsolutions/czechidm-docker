@@ -121,13 +121,13 @@ There is also a number of new env variables added in this container.
 - **CZECHIDM_MAIL_PASSFILE** - Password for logging into mail relay. Path to the file where password is stored, it is `cat`ed into the configuration. If relay does not need authentication, leave it at default. **Default: not set, property not added to config**.
 - **CZECHIDM_MAIL_SENDER** - The "From" address in the mail. **Default: czechidm@localhost**.
 - **CZECHIDM_MAX_UPLOAD_SIZE** - The maximum size of uploaded file the application accepts (e.g. "20MB", "1024KB"). Supported units are **KB** and **MB** (case sensitive!). The default value should be enough for almost everybody. **Default: 100MB**
-- **CZECHIDM_CAS_ENABLED** - Enable authentication via CAS. If enabled, all properties **CZECHIDM_CAS_...** become mandatory and must be set for SSO authentication via CAS to work.
-- **CZECHIDM_CAS_URL** - Base URL where CAS is accessible.
-- **CZECHIDM_CAS_LOGIN_SUFFIX** - Suffix which is appended to idm.pub.core.cas-url. Result URL us used for login operation. It must start with slash (eg. /login)
-- **CZECHIDM_CAS_LOGOUT_SUFFIX** - Suffix which is appended to idm.pub.core.cas-url. Result URL us used for single sign-out operation. It must start with slash (eg. /logout)
-- **CZECHIDM_CAS_IDM_URL** - URL of IdM. This URL is used for redirect back after logout and for ticket validation.
-- **CZECHIDM_CAS_HEADER_NAME** - Header name in which CAS sends the ticket value.
-- **CZECHIDM_CAS_HEADER_PREFIX** - Prefix for the value of header defined by idm.sec.core.cas-header-name.
+- **CZECHIDM_CAS_ENABLED** - Enable authentication via CAS. If enabled, all properties **CZECHIDM_CAS_...** become mandatory and must be set for SSO authentication via CAS to work. **Default: false**
+- **CZECHIDM_CAS_URL** - Base URL where CAS is accessible. Syntax of this field is `https://hostname-of-CAS/URI`. **Default: empty**
+- **CZECHIDM_CAS_LOGIN_SUFFIX** - Suffix which is, in effect, appended to CZECHIDM_CAS_URL. Resulting URL is used for login operation in CAS. It must start with slash (eg. `/login`). **Default: `/login?service=`**
+- **CZECHIDM_CAS_LOGOUT_SUFFIX** - Suffix which is appended to CZECHIDM_CAS_URL. Resulting URL is used for single sign-out operation. It must start with slash (eg. `/logout`). **Default: `/logout?service=`**
+- **CZECHIDM_CAS_IDM_URL** - URL of CzechIdM. This URL is used for redirect back after logout and also for ticket validation. Syntax of this field is `https://hostname-of-CzechIdM/URI`. **Default: empty**
+- **CZECHIDM_CAS_HEADER_NAME** - Header name in which CAS sends the ticket value. **Default: `referer`**
+- **CZECHIDM_CAS_HEADER_PREFIX** - Path to CzechIdM for the HTTP Referer header used by CAS while redirecting back to application. This value is concatenated with CAS ticket to form Referer header. Syntax of this field is `https://hostname-of-CzechIdM/URI/?ticket=`. **Default: empty**
 
 ## Mounted files and volumes
 - Mandatory
