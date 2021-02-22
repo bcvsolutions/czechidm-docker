@@ -176,3 +176,31 @@ if [ -z "${CZECHIDM_CAS_HEADER_PREFIX}" ]; then
 else
   sed -i "s|idm.sec.core.cas-header-prefix.*|idm.sec.core.cas-header-prefix=$CZECHIDM_CAS_HEADER_PREFIX|" application-docker.properties;
 fi
+
+# File with LDAP password
+if [ -z "${CZECHIDM_CAS_LDAP_PWD_FILE}" ]; then
+  echo "[$0] CZECHIDM_CAS_LDAP_PWD_FILE not set, using default from the template.";
+else
+  sed -i "s|idm.sec.cas.pwd-file-location.*|idm.sec.cas.pwd-file-location=$CZECHIDM_CAS_LDAP_PWD_FILE|" application-docker.properties;
+fi
+
+# LDAP host fo CAS integration
+if [ -z "${CZECHIDM_CAS_LDAP_HOST}" ]; then
+  echo "[$0] CZECHIDM_CAS_LDAP_HOST not set, using default from the template.";
+else
+  sed -i "s|idm.sec.cas.ldap.host.*|idm.sec.cas.ldap.host=$CZECHIDM_CAS_LDAP_HOST|" application-docker.properties;
+fi
+
+# Principal which IdM uses to connect to to LDAP
+if [ -z "${CZECHIDM_CAS_LDAP_PRINCIPAL}" ]; then
+  echo "[$0] CZECHIDM_CAS_LDAP_PRINCIPAL not set, using default from the template.";
+else
+  sed -i "s|idm.sec.cas.ldap.principal.*|idm.sec.cas.ldap.principal=$CZECHIDM_CAS_LDAP_PRINCIPAL|" application-docker.properties;
+fi
+
+# Base context for CAS LDAP
+if [ -z "${CZECHIDM_CAS_LDAP_BASE_CONTEXT}" ]; then
+  echo "[$0] CZECHIDM_CAS_LDAP_BASE_CONTEXT not set, using default from the template.";
+else
+  sed -i "s|idm.sec.cas.ldap.base-contexts.*|idm.sec.cas.ldap.base-contexts=$CZECHIDM_CAS_LDAP_BASE_CONTEXT|" application-docker.properties;
+fi
