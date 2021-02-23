@@ -6,6 +6,3 @@ chmod u+rwx "$CZECHIDM_CONFIG/backup"
 
 chown tomcat:tomcat "$CZECHIDM_CONFIG/data"
 chmod u+rwx "$CZECHIDM_CONFIG/data"
-
-chown -R tomcat:tomcat "$CZECHIDM_CONFIG/etc"
-chmod u+rwx "$CZECHIDM_CONFIG/etc"
