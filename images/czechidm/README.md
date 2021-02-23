@@ -128,6 +128,10 @@ There is also a number of new env variables added in this container.
 - **CZECHIDM_CAS_IDM_URL** - URL of CzechIdM. This URL is used for redirect back after logout and also for ticket validation. Syntax of this field is `https://hostname-of-CzechIdM/URI`. **Default: empty**
 - **CZECHIDM_CAS_HEADER_NAME** - Header name in which CAS sends the ticket value. **Default: `referer`**
 - **CZECHIDM_CAS_HEADER_PREFIX** - Path to CzechIdM for the HTTP Referer header used by CAS while redirecting back to application. This value is concatenated with CAS ticket to form Referer header. Syntax of this field is `https://hostname-of-CzechIdM/URI/?ticket=`. **Default: empty**
+- **CZECHIDM_CAS_LDAP_PWD_FILE** - Absolute location of the file which contains password to CAS's underlying LDAP. Format of this property needs to be `file:ABSOLUTE_PATH`. For example `file:/run/secrets/ldap.pwfile`. See `Mounted files and volumes` to learn how to bind volume with this file. **Default: empty**
+- **CZECHIDM_CAS_LDAP_HOST** - Hostname of CAS's underlying LDAP. **Default: empty**
+- **CZECHIDM_CAS_LDAP_PRINCIPAL** - Distinguished name of account used for LDAP management. See `CZECHIDM_CAS_LDAP_PWD_FILE` **Default: empty**
+- **CZECHIDM_CAS_LDAP_BASE_CONTEXT** - Base context of CAS's underlying LDAP. IdM will manage users in `ou=users,CZECHIDM_CAS_LDAP_BASE_CONTEXT` **Default: empty**
 
 ## Mounted files and volumes
 - Mandatory
@@ -234,6 +238,16 @@ There is also a number of new env variables added in this container.
           source: /etc/yum/var/iam_password
           target: /run/secrets/iam_repo_password
           read_only: true
+      ```
+  - CAS LDAP password file
+    - File containing password to **CZECHIDM_CAS_LDAP_PRINCIPAL**. See **CZECHIDM_CAS_LDAP_PWD_FILE**
+    - Example
+      ```yaml
+      volumes:
+        - type: bind
+          source: ./ldap.pwfile
+          target: /run/secrets/ldap.pwfile
+          read_only: false
       ```
 
 ## Forbidden variables
