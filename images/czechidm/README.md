@@ -247,7 +247,7 @@ There is also a number of new env variables added in this container.
         - type: bind
           source: ./ldap.pwfile
           target: /run/secrets/ldap.pwfile
-          read_only: false
+          read_only: true
       ```
 
 ## Forbidden variables
