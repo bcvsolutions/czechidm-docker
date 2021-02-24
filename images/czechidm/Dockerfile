@@ -38,7 +38,7 @@ RUN cd $TOMCAT_BASE/conf && \
 # also download, install and set up maven
 RUN groupadd -r idmbuild && \
 		useradd -r -s /sbin/nologin -g idmbuild -d "$CZECHIDM_BUILDROOT" idmbuild && \
-		mkdir -pv $CZECHIDM_BUILDROOT/{product,modules,dist,tool,frontend/config,frontend/czechidm-modules,target,checksums,maven} && \
+		mkdir -pv $CZECHIDM_BUILDROOT/{product,modules,dist,tool,frontend/config,frontend/czechidm-modules,target,checksums,maven,.m2,tpl} && \
 		chmod -v o-rwx "$CZECHIDM_BUILDROOT" && \
 		chown -Rfv idmbuild:idmbuild "$CZECHIDM_BUILDROOT" && \
 		\
@@ -79,6 +79,9 @@ RUN groupadd -r idmbuild && \
 # because it also needs whole lib/ with it - that would make more than 100MB of
 # dead weight.
 COPY "dropin/idm-app-$CZECHIDM_VERSION.war" "dropin/application-docker.TPL.properties" "$CZECHIDM_BUILDROOT/product/"
+
+# Configuration templates with access to repo.iamappliance.com
+COPY "dropin/npmrc.TPL" "dropin/settings.xml.TPL" "dropin/fe-pom.xml.TPL" "$CZECHIDM_BUILDROOT/tpl/"
 
 # finally, copy over the runscripts; this adds our runscripts to the Tomcat baseimage
 COPY runscripts "$RUNSCRIPTS_PATH/"

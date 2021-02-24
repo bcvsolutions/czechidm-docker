@@ -1,0 +1,51 @@
+<settings>
+  <servers>
+    <server>
+      <id>repo-appliance</id>
+      <username>__TPL_IAM_USERNAME__</username>
+      <password>__TPL_IAM_PASSWORD__</password>
+    </server>
+  </servers>
+
+  <pluginGroups>
+     <pluginGroup>external.atlassian.jgitflow</pluginGroup>
+  </pluginGroups>
+
+  <mirrors>
+    <mirror>
+      <id>repo-appliance</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://repo.iamappliance.com/repository/mvn-all/</url>
+    </mirror>
+  </mirrors>
+
+  <profiles>
+    <profile>
+      <id>iam-repo</id>
+      <repositories>
+        <repository>
+          <id>mvn-releases</id>
+          <url>https://repo.iamappliance.com/repository/mvn-releases/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+          <id>mvn-modules-releases</id>
+          <url>https://repo.iamappliance.com/repository/mvn-modules-releases/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+        <repository>
+          <id>mvn-public-releases</id>
+          <url>https://repo.iamappliance.com/repository/mvn-public-releases/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>iam-repo</activeProfile>
+  </activeProfiles>
+</settings>
+

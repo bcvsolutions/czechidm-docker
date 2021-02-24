@@ -39,7 +39,9 @@ if [ ! -f "logback-spring.xml" ]; then
   xmlstarlet ed -L -d "//configuration/springProfile[@name!='dev']" logback-spring.xml && \
   xmlstarlet ed -L -u "//springProfile/@name" -v "docker" logback-spring.xml && \
   xmlstarlet ed -L -u "//springProfile/logger/@level" -v "$CZECHIDM_LOGGING_LEVEL" logback-spring.xml && \
-  xmlstarlet ed -L -u "//springProfile/logger/appender-ref/../@level" -v "$CZECHIDM_LOGGING_LEVEL_DB" logback-spring.xml;
+  xmlstarlet ed -L -s "//appender[@name='DB']" -t elem -n filter -v "" \
+    -a "//appender[@name='DB']/filter" -t attr -n class -v "ch.qos.logback.classic.filter.ThresholdFilter" \
+    -s "//appender[@name='DB']/filter" -t elem -n level -v "$CZECHIDM_LOGGING_LEVEL_DB" logback-spring.xml
 
   chgrp tomcat logback-spring.xml;
 

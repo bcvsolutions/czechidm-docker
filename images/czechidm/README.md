@@ -121,6 +121,17 @@ There is also a number of new env variables added in this container.
 - **CZECHIDM_MAIL_PASSFILE** - Password for logging into mail relay. Path to the file where password is stored, it is `cat`ed into the configuration. If relay does not need authentication, leave it at default. **Default: not set, property not added to config**.
 - **CZECHIDM_MAIL_SENDER** - The "From" address in the mail. **Default: czechidm@localhost**.
 - **CZECHIDM_MAX_UPLOAD_SIZE** - The maximum size of uploaded file the application accepts (e.g. "20MB", "1024KB"). Supported units are **KB** and **MB** (case sensitive!). The default value should be enough for almost everybody. **Default: 100MB**
+- **CZECHIDM_CAS_ENABLED** - Enable authentication via CAS. If enabled, all properties **CZECHIDM_CAS_...** become mandatory and must be set for SSO authentication via CAS to work. **Default: false**
+- **CZECHIDM_CAS_URL** - Base URL where CAS is accessible. Syntax of this field is `https://hostname-of-CAS/URI`. **Default: empty**
+- **CZECHIDM_CAS_LOGIN_SUFFIX** - Suffix which is, in effect, appended to CZECHIDM_CAS_URL. Resulting URL is used for login operation in CAS. It must start with slash (eg. `/login`). **Default: `/login?service=`**
+- **CZECHIDM_CAS_LOGOUT_SUFFIX** - Suffix which is appended to CZECHIDM_CAS_URL. Resulting URL is used for single sign-out operation. It must start with slash (eg. `/logout`). **Default: `/logout?service=`**
+- **CZECHIDM_CAS_IDM_URL** - URL of CzechIdM. This URL is used for redirect back after logout and also for ticket validation. Syntax of this field is `https://hostname-of-CzechIdM/URI`. **Default: empty**
+- **CZECHIDM_CAS_HEADER_NAME** - Header name in which CAS sends the ticket value. **Default: `referer`**
+- **CZECHIDM_CAS_HEADER_PREFIX** - Path to CzechIdM for the HTTP Referer header used by CAS while redirecting back to application. This value is concatenated with CAS ticket to form Referer header. Syntax of this field is `https://hostname-of-CzechIdM/URI/?ticket=`. **Default: empty**
+- **CZECHIDM_CAS_LDAP_PWD_FILE** - Absolute location of the file which contains password to CAS's underlying LDAP. Format of this property needs to be `file:ABSOLUTE_PATH`. For example `file:/run/secrets/ldap.pwfile`. See `Mounted files and volumes` to learn how to bind volume with this file. **Default: empty**
+- **CZECHIDM_CAS_LDAP_HOST** - Hostname of CAS's underlying LDAP. **Default: empty**
+- **CZECHIDM_CAS_LDAP_PRINCIPAL** - Distinguished name of account used for LDAP management. See `CZECHIDM_CAS_LDAP_PWD_FILE` **Default: empty**
+- **CZECHIDM_CAS_LDAP_BASE_CONTEXT** - Base context of CAS's underlying LDAP. IdM will manage users in `ou=users,CZECHIDM_CAS_LDAP_BASE_CONTEXT` **Default: empty**
 
 ## Mounted files and volumes
 - Mandatory
@@ -180,7 +191,6 @@ There is also a number of new env variables added in this container.
           target: /opt/tomcat/truststore/certs
           read_only: true
       ```
-
   - Attachments directory
     - CzechIdM supports attaching files to certain actions in GUI. Those attachments are stored as files on the disk - in this directory (`/opt/czechidm/data` inside the container). If you want to persist attachments (which you 100% want unless you don't use them at all), you want this directory mounted.
     - Without this directory mounted, all attachments the user inserted into CzechIdM will be lost on container rebuild.
@@ -212,6 +222,31 @@ There is also a number of new env variables added in this container.
         - type: bind
           source: ./connector-jars
           target: /idmbuild/modules
+          read_only: true
+      ```
+  - Repository credentials
+    - Login and password to [repo.iamappliance.com](repo.iamappliance.com) for Maven and NPM.
+    - If the login and password are filled in, the Maven and NPM packages will be downloaded from repo.iamappliance.com. If not, publicly available portals (Maven and NodeJS central) will be used.
+    - Example
+      ```yaml
+      volumes:
+        - type: bind
+          source: /etc/yum/var/iam_username
+          target: /run/secrets/iam_repo_username
+          read_only: true
+        - type: bind
+          source: /etc/yum/var/iam_password
+          target: /run/secrets/iam_repo_password
+          read_only: true
+      ```
+  - CAS LDAP password file
+    - File containing password to **CZECHIDM_CAS_LDAP_PRINCIPAL**. See **CZECHIDM_CAS_LDAP_PWD_FILE**
+    - Example
+      ```yaml
+      volumes:
+        - type: bind
+          source: ./ldap.pwfile
+          target: /run/secrets/ldap.pwfile
           read_only: true
       ```
 
