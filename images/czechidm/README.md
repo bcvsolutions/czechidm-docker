@@ -132,6 +132,7 @@ There is also a number of new env variables added in this container.
 - **CZECHIDM_CAS_LDAP_HOST** - Hostname of CAS's underlying LDAP. **Default: empty**
 - **CZECHIDM_CAS_LDAP_PRINCIPAL** - Distinguished name of account used for LDAP management. See `CZECHIDM_CAS_LDAP_PWD_FILE` **Default: empty**
 - **CZECHIDM_CAS_LDAP_BASE_CONTEXT** - Base context of CAS's underlying LDAP. IdM will manage users in `ou=users,CZECHIDM_CAS_LDAP_BASE_CONTEXT` **Default: empty**
+- **CZECHIDM_CAS_MODULE_ENABLED** - Enables idm-cas module. Note that module needs to be installed (See `CzechIdM modules directories` in the next section). Enabling CAS module at startup is needed for initialization of IdM-CAS integration. **Default: false**
 
 ## Mounted files and volumes
 - Mandatory
