@@ -204,3 +204,11 @@ if [ -z "${CZECHIDM_CAS_LDAP_BASE_CONTEXT}" ]; then
 else
   sed -i "s|idm.sec.cas.ldap.base-contexts.*|idm.sec.cas.ldap.base-contexts=$CZECHIDM_CAS_LDAP_BASE_CONTEXT|" application-docker.properties;
 fi
+
+# Enable cas module
+if [ -z "${CZECHIDM_CAS_MODULE_ENABLED}" ]; then
+  echo "[$0] CZECHIDM_CAS_MODULE_ENABLED not set, using default from the template.";
+else
+  sed -i "s|idm.pub.cas.enabled.*|idm.pub.cas.enabled=$CZECHIDM_CAS_MODULE_ENABLED|" application-docker.properties;
+fi
+
