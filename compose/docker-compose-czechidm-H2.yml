@@ -7,7 +7,7 @@ version: '3.2'
 
 services:
   appserver:
-    image: bcv-czechidm:10.8.2-r0
+    image: bcv-czechidm:10.8.2-r1
     container_name: czechidm
     ports:
       - 8009:8009

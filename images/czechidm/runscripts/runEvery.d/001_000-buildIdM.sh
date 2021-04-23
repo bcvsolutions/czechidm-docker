@@ -73,6 +73,12 @@ fi
 tar xzf node-v15.3.0-linux-x64.tar.gz
 
 # doing the rebuild here
+echo "[$0] Cleaning up in case of previous failed build...";
+rm -rf $CZECHIDM_BUILDROOT/tool/*;
+rm -rf $CZECHIDM_BUILDROOT/dist/*;
+rm -rf $CZECHIDM_BUILDROOT/target/*;
+rm -rf $CZECHIDM_BUILDROOT/.npmrc;
+rm -rf $CZECHIDM_BUILDROOT/.m2/settings.xml;
 cd "$CZECHIDM_BUILDROOT/tool" && \
 jar xf "$CZECHIDM_BUILDROOT/product/idm-app-$CZECHIDM_VERSION.war" WEB-INF/idm-tool.jar WEB-INF/lib && \
 mv WEB-INF/* ./ && \
