@@ -17,14 +17,26 @@ for dir in modules frontend/config frontend/czechidm-modules; do
   if [ ! -f "checksums/$hashfile" ] && [ "$(ls -A $dir)x" != "x" ]; then
     #no checksum but non-empty dir - we will rebuild
     echo "[$0] Hashfile: $hashfile does not exist but directory: $dir is not empy, will rebuild.";
-    md5sum $dir/* | sort -k2 > "checksums/$hashfile.new";
+    find $dir/* | while read f; do \
+      if [ -d "$f" ]; then \
+        echo "__dir__ $f"; \
+      else \
+        md5sum "$f"; \
+      fi; \
+    done | sort -k2 > "checksums/$hashfile.new";
     rebuild="true";
     continue;
   fi
   if [ -f "checksums/$hashfile" ]; then
     #checksum exists, this means we check the dir against it
     #it does not matter if dir is empty or not - we would be checking it anyway
-    md5sum $dir/* | sort -k2 > "checksums/$hashfile.new";
+    find $dir/* | while read f; do \
+      if [ -d "$f" ]; then \
+        echo "__dir__ $f"; \
+      else \
+        md5sum "$f"; \
+      fi; \
+    done | sort -k2 > "checksums/$hashfile.new";
     diff "checksums/$hashfile" "checksums/$hashfile.new";
     res=$?;
     if [ "$res" -eq "0" ]; then
