@@ -17,14 +17,26 @@ for dir in modules frontend/config frontend/czechidm-modules; do
   if [ ! -f "checksums/$hashfile" ] && [ "$(ls -A $dir)x" != "x" ]; then
     #no checksum but non-empty dir - we will rebuild
     echo "[$0] Hashfile: $hashfile does not exist but directory: $dir is not empy, will rebuild.";
-    md5sum $dir/* | sort -k2 > "checksums/$hashfile.new";
+    find $dir/* | while read f; do \
+      if [ -d "$f" ]; then \
+        echo "__dir__ $f"; \
+      else \
+        md5sum "$f"; \
+      fi; \
+    done | sort -k2 > "checksums/$hashfile.new";
     rebuild="true";
     continue;
   fi
   if [ -f "checksums/$hashfile" ]; then
     #checksum exists, this means we check the dir against it
     #it does not matter if dir is empty or not - we would be checking it anyway
-    md5sum $dir/* | sort -k2 > "checksums/$hashfile.new";
+    find $dir/* | while read f; do \
+      if [ -d "$f" ]; then \
+        echo "__dir__ $f"; \
+      else \
+        md5sum "$f"; \
+      fi; \
+    done | sort -k2 > "checksums/$hashfile.new";
     diff "checksums/$hashfile" "checksums/$hashfile.new";
     res=$?;
     if [ "$res" -eq "0" ]; then
@@ -73,6 +85,12 @@ fi
 tar xzf node-v15.3.0-linux-x64.tar.gz
 
 # doing the rebuild here
+echo "[$0] Cleaning up in case of previous failed build...";
+rm -rf $CZECHIDM_BUILDROOT/tool/*;
+rm -rf $CZECHIDM_BUILDROOT/dist/*;
+rm -rf $CZECHIDM_BUILDROOT/target/*;
+rm -rf $CZECHIDM_BUILDROOT/.npmrc;
+rm -rf $CZECHIDM_BUILDROOT/.m2/settings.xml;
 cd "$CZECHIDM_BUILDROOT/tool" && \
 jar xf "$CZECHIDM_BUILDROOT/product/idm-app-$CZECHIDM_VERSION.war" WEB-INF/idm-tool.jar WEB-INF/lib && \
 mv WEB-INF/* ./ && \
