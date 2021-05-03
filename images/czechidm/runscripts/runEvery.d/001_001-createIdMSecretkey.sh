@@ -31,8 +31,8 @@ if [ ! -f "secret.key" ] && [ ! -L "secret.key" ]; then
   chmod 640 secret.key;
 else
   length=$(wc -c secret.key | cut -d' ' -f1);
-  if [ "$length" -ne 17 ]; then
-    echo "[$0] Weird secret.key found, not 17b long.";
+  if [ "$length" -ne 17 ] && [ "$length" -ne 33 ]; then
+    echo "[$0] Weird secret.key found, not 17 or 33b long.";
   fi
   echo "[$0] The secret.key already exists, using what we have.";
 fi
