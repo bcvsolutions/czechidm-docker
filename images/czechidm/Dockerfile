@@ -1,4 +1,4 @@
-FROM repo.iamappliance.com:8443/bcv-tomcat:9.0.41-r0
+FROM repo.iamappliance.com:8443/bcv-tomcat:9.0.41-r1
 
 ENV MAVEN_MAJOR 3
 ENV MAVEN_VERSION 3.6.3
