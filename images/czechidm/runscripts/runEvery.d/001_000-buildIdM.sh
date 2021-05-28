@@ -68,22 +68,6 @@ if [ "$rebuild" == "false" ]; then
 fi
 
 echo "[$0] Rebuilding CzechIdM...";
-
-# install nodejs because we need npx binary, idm-tool cannot install it itself
-# this is a workaround. since 10.4.0 until idm starts using gulp4 for builds
-rm -rf "$CZECHIDM_BUILDROOT/nodejs-dist"
-mkdir "$CZECHIDM_BUILDROOT/nodejs-dist"
-cd "$CZECHIDM_BUILDROOT/nodejs-dist"
-wget -q https://repo.iamappliance.com/repository/binary-public/node/v15.3.0/node-v15.3.0-linux-x64.tar.gz
-sha256sum node-v15.3.0-linux-x64.tar.gz | grep -q c3f6c64d98e623c783b7de7580365be74d8a2dba87529447ae66061609b5d0ec
-if [ "$?" -eq "0" ]; then
-  echo "[$0] NodeJS 15.3.0 archive verification succeeded.";
-else
-  echo "[$0] NodeJS 15.3.0 archive verification failed. Killing the rebuild...";
-  rm -fv node-v15.3.0-linux-x64.tar.gz
-fi
-tar xzf node-v15.3.0-linux-x64.tar.gz
-
 # doing the rebuild here
 echo "[$0] Cleaning up in case of previous failed build...";
 rm -rf $CZECHIDM_BUILDROOT/tool/*;
@@ -117,7 +101,7 @@ if [ -f "/run/secrets/iam_repo_username" ] && [ -f "/run/secrets/iam_repo_passwo
 else
   echo "[$0] Login and password for repository not found.";
 fi && \
-sudo -Eu idmbuild bash -c "PATH=$PATH:$CZECHIDM_BUILDROOT/nodejs-dist/node-v15.3.0-linux-x64/bin java -jar idm-tool.jar -p --build";
+sudo -Eu idmbuild bash -c "java -jar idm-tool.jar -p --build";
 res=$?;
 if [ "$res" -eq "0" ]; then
   echo "[$0] Build successful, deploying new IdM into Tomcat...";
